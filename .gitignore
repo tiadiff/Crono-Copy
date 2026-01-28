@@ -1,0 +1,8 @@
+history.json
+.DS_Store
+*.app
+set_icon.swift
+clipboard_manager.py
+requirements.txt
+run.sh
+app.log
