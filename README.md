@@ -33,5 +33,17 @@ If you want to compile the application yourself, you need **Swift** installed (i
    ```
 3. The `ClipboardHistory.app` will be generated in the current directory.
 
-## 📄 License
-This project is open-source and available for personal use.
+## � Changelog
+
+### [1.0.1] - 2026-01-28
+- **Performance Optimization**: Implemented on-demand menu building. The UI items are now generated only when clicking the icon, significantly reducing background CPU usage.
+- **Disk I/O Improvement**: Optimized history persistence logic.
+- **Fixed**: Removed UI refresh overhead during background capture.
+
+### [1.0.0] - 2026-01-28
+- Initial release.
+- Native Swift macOS application.
+- History tracking (up to 20 items).
+- SF Symbols integration.
+- Menu bar only (Accessory mode).
+
