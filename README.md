@@ -4,19 +4,19 @@ A lightweight, native macOS menu bar application to track and manage your clipbo
 
 ## 🚀 Features
 
-- **Background Operation**: Runs silently in the macOS menu bar (Menu Bar Extra).
+- **Background Operation**: Runs silently in the macOS menu bar.
+- **Icon**: Look for the **Double Document icon** (📋/SF Symbol `doc.on.clipboard`) in your top right menu bar.
 - **Auto-Capture**: Automatically saves any text copied to the clipboard (`CMD+C`).
-- **Quick Recall**: Click the menu bar icon to view the last 20 copied items. Clicking an item copies it back to your clipboard.
-- **Persistent Storage**: History is saved in a local `history.json` file.
-- **Reset History**: Easily clear your entire history with one click.
-- **Native Look & Feel**: Uses SF Symbols and follows macOS design guidelines, supporting both Light and Dark modes.
-- **No Dock Icon**: Stays out of your workspace by only appearing in the menu bar.
+- **Quick Recall**: Click the menu bar icon to view history. Clicking an item copies it back.
+- **Persistent Storage**: Saved in `history.json`.
+- **Native Design**: Gray-tinted icon compatible with both Light and Dark modes.
 
-## 🛠 Installation
+## 🛠 Installation & Usage
 
-1. Download the `ClipboardHistory.app`.
-2. Move it to your `/Applications` folder (optional).
-3. Double-click to run.
+1. **Download & Run**: You can start the program directly by double-clicking the `ClipboardHistory.app` included in this repository.
+2. **First Run**: Since it's an unsigned app, you might need to Right-Click -> Open, or allow it in System Settings -> Privacy & Security.
+3. **Menu Bar**: Once launched, it will only appear in the top-right menu bar. No Dock icon will be visible.
+
 
 ## 🏗 How to Build from Source
 
