@@ -118,7 +118,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @objc func resetHistory(_ sender: Any) {
         history.removeAll()
         saveHistory()
-        updateMenu()
     }
     
     // Persistence
