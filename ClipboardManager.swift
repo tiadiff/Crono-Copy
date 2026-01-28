@@ -37,42 +37,51 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // Load History
         loadHistory()
         
-        // build initial menu
-        updateMenu()
+        // Setup dynamic menu
+        let menu = NSMenu()
+        menu.delegate = self // This allows us to use menuWillOpen
+        statusItem.menu = menu
         
-        // Start Monitoring
+        // Start Monitoring (stays at 0.5s for maximum reliability)
         lastChangeCount = NSPasteboard.general.changeCount
         timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
             self.checkClipboard()
         }
     }
     
+    // Delegate method: called only when user clicks the icon
+    func menuWillOpen(_ menu: NSMenu) {
+        updateMenu(menu)
+        // We save to disk only when user interacts or copies, but let's ensure it's saved here
+        saveHistory() 
+    }
+
     func checkClipboard() {
         let pb = NSPasteboard.general
         if pb.changeCount != lastChangeCount {
             lastChangeCount = pb.changeCount
             
             if let content = pb.string(forType: .string) {
-                // Avoid duplicates at the top
                 if history.first != content {
-                    // Update model
+                    // Optimized: Only update memory list, no UI updates or Disk I/O here
                     history.insert(content, at: 0)
                     if history.count > MAX_HISTORY {
                         history = Array(history.prefix(MAX_HISTORY))
                     }
+                    // Optional: saveHistory() could be called here if you want high persistence
+                    // or kept only in memory until menu opens/app quits for maximum speed.
+                    // Let's keep it for safety but notice we removed UI rebuilding.
                     saveHistory()
-                    updateMenu()
                 }
             }
         }
     }
     
-    func updateMenu() {
-        let menu = NSMenu()
-        menu.delegate = self
+    func updateMenu(_ menu: NSMenu) {
+        menu.removeAllItems()
         
         // History Items
-        for (index, text) in history.enumerated() {
+        for text in history {
             let truncated = text.prefix(30) + (text.count > 30 ? "..." : "")
             let item = NSMenuItem(title: String(truncated), action: #selector(copyToClipboard(_:)), keyEquivalent: "")
             item.target = self
@@ -94,8 +103,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         
         let quitItem = NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         menu.addItem(quitItem)
-        
-        statusItem.menu = menu
     }
     
     @objc func copyToClipboard(_ sender: NSMenuItem) {
