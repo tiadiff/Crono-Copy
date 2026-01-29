@@ -11,10 +11,29 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     var lastChangeCount: Int = 0
     var timer: Timer?
     
-    // File path for history.json (in current directory)
+    // Unified persistence: store history in Application Support
     var historyPath: URL {
-        let currentDir = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
-        return currentDir.appendingPathComponent(HISTORY_FILE)
+        let fileManager = FileManager.default
+        let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        let appDirectory = appSupport.appendingPathComponent("com.user.clipboardhistory")
+        
+        // Create directory if it doesn't exist
+        if !fileManager.fileExists(atPath: appDirectory.path) {
+            try? fileManager.createDirectory(at: appDirectory, withIntermediateDirectories: true)
+        }
+        
+        return appDirectory.appendingPathComponent(HISTORY_FILE)
+    }
+
+    // Migration: Helper to check if we have data in the old location
+    private func migrateFromOldLocation() {
+        let oldPath = URL(fileURLWithPath: FileManager.default.currentDirectoryPath).appendingPathComponent(HISTORY_FILE)
+        let newPath = historyPath
+        
+        if FileManager.default.fileExists(atPath: oldPath.path) && !FileManager.default.fileExists(atPath: newPath.path) {
+            print("Migrating history from \(oldPath.path) to \(newPath.path)")
+            try? FileManager.default.moveItem(at: oldPath, to: newPath)
+        }
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -33,6 +52,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 button.title = "Clip"
             }
         }
+        
+        // Migrate old data if present
+        migrateFromOldLocation()
         
         // Load History
         loadHistory()
