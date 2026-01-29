@@ -2,6 +2,8 @@
 
 A lightweight, native macOS menu bar application to track and manage your clipboard history.
 
+<img width="269" height="228" alt="Schermata 2026-01-29 alle 10 23 00" src="https://github.com/user-attachments/assets/a8a08033-de7c-42df-94c8-036a349eb9a6" />
+
 ## 🚀 Features
 
 - **Background Operation**: Runs silently in the macOS menu bar.
