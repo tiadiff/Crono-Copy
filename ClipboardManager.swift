@@ -14,12 +14,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     // Unified persistence: store history in Application Support
     var historyPath: URL {
         let fileManager = FileManager.default
-        let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        guard let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
+            return URL(fileURLWithPath: FileManager.default.currentDirectoryPath).appendingPathComponent(HISTORY_FILE)
+        }
+        
         let appDirectory = appSupport.appendingPathComponent("com.user.clipboardhistory")
         
         // Create directory if it doesn't exist
         if !fileManager.fileExists(atPath: appDirectory.path) {
-            try? fileManager.createDirectory(at: appDirectory, withIntermediateDirectories: true)
+            do {
+                try fileManager.createDirectory(at: appDirectory, withIntermediateDirectories: true)
+            } catch {
+                print("Failed to create directory: \(error)")
+                return URL(fileURLWithPath: FileManager.default.currentDirectoryPath).appendingPathComponent(HISTORY_FILE)
+            }
         }
         
         return appDirectory.appendingPathComponent(HISTORY_FILE)
